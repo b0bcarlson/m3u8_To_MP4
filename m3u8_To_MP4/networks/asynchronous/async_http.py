@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import asyncio
 import logging
 import urllib.error
@@ -17,9 +16,6 @@ def http_get_header(domain_name, port, resource_path_at_server, is_keep_alive):
         domain_name, port)
     user_agent = http_base.random_user_agent_str()
     http_connection = http_base.statement_of_http_connection_str(is_keep_alive)
-
-    # x_forward_for=random_x_forward_for()
-    # cookie=random_cookie()
 
     request_header = '\r\n'.join((http_get_resource, http_connect_address,
                                   user_agent, http_connection)) + '\r\n\r\n'
@@ -89,7 +85,7 @@ async def retrieve_resource_from_url(address_info, url, ssl_context_,
                 retrieve_resource_from_handler(reader, writer, request_header),
                 timeout=8)
 
-        except asyncio.TimeoutError as te:
+        except asyncio.TimeoutError:
             logging.debug('request timeout: {}'.format(url))
 
         except Exception as exc:
@@ -102,10 +98,6 @@ async def retrieve_resource_from_url(address_info, url, ssl_context_,
                 if writer is not None:
                     writer.close()
                     await writer.wait_closed()
-
-                # if reader is not None:
-                #     reader.feed_eof()
-                # assert reader.at_eof()
         except Exception as exc:
             logging.debug(
                 'request failed: {}, and caused reason is {}'.format(url,

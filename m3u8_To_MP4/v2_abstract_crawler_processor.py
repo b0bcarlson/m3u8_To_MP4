@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 import os
 import shutil
@@ -102,8 +101,6 @@ class AbstractCrawler(object):
             self.mp4_file_dir = os.getcwd()
 
         mp4_file_name = path_helper.calibrate_mp4_file_name(self.mp4_file_name)
-        # if not is_valid:
-        #     mp4_file_name = path_helper.create_mp4_file_name()
 
         mp4_file_path = os.path.join(self.mp4_file_dir, mp4_file_name)
 
@@ -126,23 +123,6 @@ class AbstractCrawler(object):
 
     def _create_tasks(self):
         raise NotImplementedError
-
-    def _is_ads(self, segment_uri):
-        if segment_uri.startswith(self.longest_common_subsequence):
-            return True
-
-        # if not segment_uri.endswith('.ts'):
-        #     return True
-
-        return False
-
-    def _filter_ads_ts(self, key_segments_pairs):
-        self.longest_common_subsequence = path_helper.longest_common_subsequence([segment_uri for _, segment_uri in key_segments_pairs])
-        key_segments_pairs = [(_encrypted_key, segment_uri) for
-                              _encrypted_key, segment_uri in key_segments_pairs
-                              if not self._is_ads(segment_uri)]
-
-        return key_segments_pairs
 
     def _is_fetched(self, segment_uri):
         file_name = path_helper.resolve_file_name_by_uri(segment_uri)
@@ -196,10 +176,6 @@ class AbstractCrawler(object):
             p = subprocess.Popen(merge_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.communicate()
 
-
-    def _merge_to_mp4_by_os(self):
-        raise NotImplementedError
-
     def _merge_to_tar_by_os(self):
         with tarfile.open(self.tar_file_path, 'w:bz2') as targz:
             targz.add(name=self.tmpdir, arcname=os.path.basename(self.tmpdir))
@@ -215,7 +191,6 @@ class AbstractCrawler(object):
         if len(key_segments_pairs) < 1:
             raise ValueError('NO FOUND TASKS!\n Please check m3u8 url.')
 
-        key_segments_pairs = self._filter_ads_ts(key_segments_pairs)
         self._construct_segment_path_recipe(key_segments_pairs)
 
         key_segments_pairs = self._filter_done_ts(key_segments_pairs)

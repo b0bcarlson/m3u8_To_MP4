@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 import collections
 import logging
+from abc import ABC
 
 import m3u8
 
@@ -23,7 +23,7 @@ class M3u8PlaylistIsNoneException(Exception):
         self.reason = reason
 
 
-class AbstractFileCrawler(AbstractCrawler):
+class AbstractFileCrawler(AbstractCrawler, ABC):
     def __init__(self, m3u8_uri, m3u8_file_path, customized_http_header=None,
                  max_retry_times=3, num_concurrent=50, mp4_file_dir=None,
                  mp4_file_name='m3u8-To-Mp4.mp4', tmpdir=None):
@@ -35,7 +35,6 @@ class AbstractFileCrawler(AbstractCrawler):
         self.m3u8_file_path = m3u8_file_path
 
     def _read_m3u8_file(self):
-        m3u8_str = ''
         with open(self.m3u8_file_path, 'r', encoding='utf8') as fin:
             m3u8_str = fin.read().strip()
         return m3u8_str
@@ -96,7 +95,7 @@ class AbstractFileCrawler(AbstractCrawler):
         return key_segments_pairs
 
 
-class AbstractUriCrawler(AbstractCrawler):
+class AbstractUriCrawler(AbstractCrawler, ABC):
     def _request_m3u8_obj_from_url(self):
         try:
             response_code, m3u8_bytes = sync_http.retrieve_resource_from_url(

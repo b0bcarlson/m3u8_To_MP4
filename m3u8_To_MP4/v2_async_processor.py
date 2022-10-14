@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from m3u8_To_MP4 import v2_abstract_task_processor
 from m3u8_To_MP4.networks.asynchronous import async_producer_consumer
 

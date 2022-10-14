@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -18,7 +17,7 @@ def get_headers(customized_http_header):
 
 
 def request_for(url, max_try_times=1, headers=None, data=None, timeout=30,
-                proxy_ip=None, verify=False, customized_http_header=None):
+				customized_http_header=None):
     response_code = -1
     response_content = None
 
@@ -39,11 +38,11 @@ def request_for(url, max_try_times=1, headers=None, data=None, timeout=30,
                 break
         except urllib.error.HTTPError as he:
             response_code = he.code
-        except urllib.error.ContentTooShortError as ctse:
+        except urllib.error.ContentTooShortError:
             response_code = -2  # -2:ctse
-        except urllib.error.URLError as ue:
+        except urllib.error.URLError:
             response_code = -3  # -3:URLError
-        except Exception as exc:
+        except Exception:
             response_code = -4  # other error
         finally:
             timeout += 2

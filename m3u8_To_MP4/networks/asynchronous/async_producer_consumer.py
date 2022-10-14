@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 import asyncio
 import itertools
 import logging
 import os
 import platform
-# import random
 import urllib.parse
 import urllib.parse
 from collections import Counter
@@ -30,7 +28,6 @@ async def ts_producer_scheduler(key_segment_pairs, addr_infos, ts_queue,
                                 num_concurrent, addr_quantity_statistics):
     exec_event_loop = asyncio.get_event_loop()
 
-    # concurrent_condition = asyncio.Semaphore(value=50, loop=exec_event_loop)# Python 3.10 does not recommend
     concurrent_condition = asyncio.Semaphore(value=num_concurrent)
 
     scheme, domain_name_with_suffix, path, query, fragment = urllib.parse.urlsplit(
@@ -87,7 +84,6 @@ def producer_process(key_segment_uris, addr_infos, ts_queue, num_concurrent):
         efficient_hosts = efficient_hosts[-num_efficient_addr_info:]
         addr_infos = [addr_info for addr_info in addr_infos if
                       addr_info.host in efficient_hosts]
-        # random.shuffle(addr_infos)
 
         if len(incompleted_tasks) > 0:
             print()
